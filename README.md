@@ -40,5 +40,54 @@ k config view -o jsonpath="{.contexts[*].name}" | tr " " "\n" # new lines
 Get current context without using kubectl (parse .kube/config)
 
 ```
-cat ~/.kube/config | grep current
+`cat ~/.kube/config | grep current-context | sed -e "s/current-context: //"` > file.txt
+```
+
+## Pod Manipulations
+
+### Extract a YAML without creating the pod
+`k run pod1 --image=nginx $do > pod1.yaml`
+
+### Deploy a pod on named node without using labels
+Add `nodeName: cluster1-master1` at the same level as containers. This is useful when the question specifically asks not to use labels on the nodes.
+
+[nodeName](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodename)
+
+[OPTIONAL] You might need to add tolerations to the pod to deploy on master node
+```
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+```
+
+### Deploy a pod on named node using labels
+
+Step 1: add label to the node that you are targeting
+`kubectl label nodes <node-name> <label-key>=<label-value>`
+E.g.:
+`kubectl label nodes master type=master` if the question is asking for deployment on master node
+`kubectl label nodes master type=master` - if pod is to be scheduled on worker node
+
+Step 2: check for taints on the node (especially master node)
+`kubectl describe nodes master | grep Taint`
+
+Remove Taint (READ THE QUESTION WHETHER THIS IS ALLOWED)
+`k taint nodes master node-role.kubernetes.io/master:NoSchedule-` (note the `-` at the end - that is remove)
+
+Step 3: make changes to your pod manifest to include `nodeSelector`
+
+```
+spec:
+  containers:
+  - image: nginx
+    name: pod1
+    resources: {}
+  nodeSelector:
+    type: worker
 ```
