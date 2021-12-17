@@ -27,7 +27,15 @@ E.g.: in `current-context: context01`, to only extract the name of the context,
 
 `cat ~/.kube/config | grep current-context | sed -e "s/current-context: //"`
 
-### 
+### Poll for something periodically
+
+Run `date` command every one second
+```
+while true; 
+do date >> /vol/date.log; 
+sleep 1; 
+done
+```
 
 ## Kubeconfig commands
 
@@ -48,6 +56,13 @@ Get current context without using kubectl (parse .kube/config)
 ### Extract a YAML without creating the pod
 `k run pod1 --image=nginx $do > pod1.yaml`
 
+### Create a busybox pod and run meaningful commands (not just sleep)
+```
+- image: busybox:1.31.1
+  name: busyboxc
+  command: ["sh", "-c", "tail -f /vol/date.log"]
+```
+
 ### Deploy a pod on named node without using labels
 Add `nodeName: cluster1-master1` at the same level as containers. This is useful when the question specifically asks not to use labels on the nodes.
 
@@ -65,6 +80,8 @@ spec:
     operator: "Exists"
     effect: "NoSchedule"
 ```
+
+[Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 ### Deploy a pod on named node using labels
 
