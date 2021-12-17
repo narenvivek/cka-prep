@@ -1,4 +1,4 @@
-# CKA Shell Setup
+# Useful commands for CKA Exam
 
 ## Setup your bash
 ```
@@ -18,16 +18,18 @@ set ts=2
 set expandtab
 set shiftwidth=2
 ```
-Command shortcuts
+## Command shortcuts
 
-0. Linux tricks
+### Extract name from context-line
 
 Erase beginning of a string in a line to retain just the name
 E.g.: in `current-context: context01`, to only extract the name of the context,
 
-`cat ~/.kube/config | grep current-context | sed -e "s/current-context: //"
+`cat ~/.kube/config | grep current-context | sed -e "s/current-context: //"`
 
-1. View kubeconfig as yaml
+### 
+
+## Kubeconfig commands
 
 Using kubectl
 ```
