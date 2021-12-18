@@ -61,6 +61,8 @@ You have missed `-` somewhere :)
 `k get nodes | grep worker | wc -l` - workers
 
 ### Pod IP address and network plug-in
+:fire: config files
+
 Directories for network plugin installation: `/opt/cni/bin`
 ```
 root@master:/opt/cni/bin# ls
